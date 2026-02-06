@@ -4,9 +4,12 @@ import {
     UploadIcon,
     TrashIcon,
     MagnifyingGlassIcon,
-    EnterFullScreenIcon, // Closest to Fit View
+    EnterFullScreenIcon,
     HamburgerMenuIcon,
     MinusIcon,
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    ArchiveIcon,
     PlusIcon,
 } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
@@ -28,14 +31,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
 import { useReactFlow } from "@xyflow/react";
-import { useFunnelStore } from "@/features/funnels/hooks/useFunnelStore";
+import { useStore } from "zustand";
+import { useFunnelStore, useTemporalStore } from "@/features/funnels/hooks/useFunnelStore";
 
 
-import { ArchiveIcon } from "@radix-ui/react-icons";
+
 
 export const TopBar = memo(() => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { zoomIn, zoomOut, fitView } = useReactFlow();
+
+    // Temporal store for Undo/Redo
+    const temporal = useStore(useTemporalStore, (state) => state);
+
     const saveFunnel = useFunnelStore((state) => state.saveFunnel);
     const exportFunnel = useFunnelStore((state) => state.exportFunnel);
     const importFunnel = useFunnelStore((state) => state.importFunnel);
@@ -100,6 +108,38 @@ export const TopBar = memo(() => {
             </div>
 
             <div className="flex items-center gap-2">
+                {/* Undo/Redo */}
+                <div className="flex items-center border-r border-border pr-2 mr-2 gap-1">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => temporal.undo()}
+                                disabled={!temporal.pastStates.length}
+                                className="h-8 w-8 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                            >
+                                <ArrowLeftIcon className="h-4 w-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Undo</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => temporal.redo()}
+                                disabled={!temporal.futureStates.length}
+                                className="h-8 w-8 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                            >
+                                <ArrowRightIcon className="h-4 w-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Redo</TooltipContent>
+                    </Tooltip>
+                </div>
+
                 {/* Zoom Controls */}
                 <div className="flex items-center border-r border-border pr-2 mr-2 gap-1">
                     <Tooltip>

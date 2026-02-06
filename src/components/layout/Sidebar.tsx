@@ -2,6 +2,8 @@ import { memo } from "react";
 import { ViewVerticalIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { NodePalette } from "@/features/funnels/components/NodePalette";
+import { ValidationPanel } from "@/features/funnels/components/ValidationPanel";
+import { ValidationIssue } from "@/features/funnels/types/funnel";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -15,6 +17,13 @@ import { useFunnelStore } from "@/features/funnels/hooks/useFunnelStore";
 
 export const Sidebar = memo(
   ({ isOpen, onToggle, onNodeClick }: SidebarProps) => {
+    const validateFunnel = useFunnelStore((state) => state.validateFunnel);
+    const nodes = useFunnelStore((state) => state.nodes);
+    const edges = useFunnelStore((state) => state.edges);
+
+    // Calculate validation issues when nodes/edges change
+    const validationIssues = validateFunnel();
+
     return (
       <>
         <Button
@@ -59,6 +68,13 @@ export const Sidebar = memo(
 
           <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-6">
             <NodePalette />
+
+            <Separator className="bg-sidebar-border" />
+
+            <ValidationPanel
+              issues={validationIssues}
+              onNodeClick={onNodeClick}
+            />
           </div>
 
           <div className="p-4 border-t border-sidebar-border bg-sidebar-accent/20">

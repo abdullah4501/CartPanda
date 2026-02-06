@@ -36,6 +36,10 @@ interface ToolbarProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onFitView: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
 export const Toolbar = memo(
@@ -47,6 +51,10 @@ export const Toolbar = memo(
     onZoomIn,
     onZoomOut,
     onFitView,
+    onUndo,
+    onRedo,
+    canUndo,
+    canRedo,
   }: ToolbarProps) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -98,6 +106,8 @@ export const Toolbar = memo(
     return (
       <div className="flex items-center gap-1 p-1 bg-card rounded-md border shadow-sm">
         <div className="flex items-center border-r border-border pr-1 mr-1 gap-0.5">
+
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

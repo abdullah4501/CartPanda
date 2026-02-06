@@ -6,6 +6,7 @@ import {
   BackgroundVariant,
   useReactFlow,
   Panel,
+  MiniMap,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -136,7 +137,15 @@ export const FunnelBuilder = () => {
               showZoom={false}
               showFitView={false}
               showInteractive={false}
-              className="!bottom-4 !right-4 !left-auto !top-auto"
+              className="!bottom-4 !right-4 !left-auto !top-auto !border-border !shadow-sm"
+            />
+
+            <MiniMap
+              nodeColor={getNodeColor}
+              maskColor="hsl(var(--background) / 0.8)"
+              className="!bottom-4 !right-16 !border-border !rounded-lg !shadow-sm"
+              pannable
+              zoomable
             />
 
 
